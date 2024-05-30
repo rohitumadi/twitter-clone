@@ -6,6 +6,8 @@ import { Button } from "../ui/button";
 import useRegisterModal from "@/hooks/useRegisterModal";
 import useLoginModal from "@/hooks/useLoginModal";
 import { useState } from "react";
+import register from "@/actions/register";
+import toast from "react-hot-toast";
 
 export default function RegisterModal() {
   const registerModal = useRegisterModal();
@@ -20,20 +22,23 @@ export default function RegisterModal() {
       registerModal.onClose();
     }
   };
-  const onSubmit = () => {
-    registerModal.onClose();
-  };
   const onToggle = () => {
     loginModal.onOpen();
     registerModal.onClose();
   };
+  const onSubmit = async (formData: any) => {
+    await register(formData);
+    toast.success("Account created");
+    registerModal.onClose();
+  };
+
   return (
     <Modal
       title="Create an account"
       isOpen={registerModal.isOpen}
       onChange={onChange}
     >
-      <div className="flex flex-col gap-4 text-white mt-8">
+      <form action={onSubmit} className="flex flex-col gap-4 text-white mt-8">
         <Input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -60,6 +65,7 @@ export default function RegisterModal() {
         />
         <Button
           onClick={onSubmit}
+          type="submit"
           className="w-full mt-4 rounded-full bg-white text-black hover:bg-neutral-400"
         >
           Register
@@ -72,7 +78,7 @@ export default function RegisterModal() {
             Already have an account?
           </span>
         </div>
-      </div>
+      </form>
     </Modal>
   );
 }

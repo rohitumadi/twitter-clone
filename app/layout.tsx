@@ -4,6 +4,7 @@ import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import FollowBar from "@/components/FollowBar";
 import ModalProvider from "@/providers/ModalProvider";
+import ToasterProvider from "@/providers/ToastProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <ToasterProvider />
         <div className="h-screen bg-black">
           <div className="container h-full  mx-auto xl:px-30 max-w-6xl ">
             <div className="grid grid-cols-4 h-full">
