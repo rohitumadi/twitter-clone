@@ -1,21 +1,43 @@
 "use client";
 
-import Modal from "../Modal";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import useRegisterModal from "@/hooks/useRegisterModal";
-import useLoginModal from "@/hooks/useLoginModal";
-import { useState } from "react";
 import register from "@/actions/register";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import useLoginModal from "@/hooks/useLoginModal";
+import useRegisterModal from "@/hooks/useRegisterModal";
+import { RegisterSchema } from "@/schemas/authSchema";
+import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import * as z from "zod";
+import Modal from "../Modal";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { useState, useTransition } from "react";
+import { signIn } from "@/lib/auth";
 
 export default function RegisterModal() {
   const registerModal = useRegisterModal();
+  const [error, setError] = useState<string | undefined>("");
+  const [isPending, startTransition] = useTransition();
   const loginModal = useLoginModal();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
   const onChange = (open: boolean) => {
     if (!open) {
@@ -26,9 +48,19 @@ export default function RegisterModal() {
     loginModal.onOpen();
     registerModal.onClose();
   };
-  const onSubmit = async (formData: any) => {
-    await register(formData);
+  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+    setError("");
+    startTransition(async () => {
+      const data = await register(values);
+      if (data.error) {
+        setError(data.error);
+      }
+    });
     toast.success("Account created");
+    signIn("credentials", {
+      email: values.email,
+      password: values.password,
+    });
     registerModal.onClose();
   };
 
@@ -38,47 +70,109 @@ export default function RegisterModal() {
       isOpen={registerModal.isOpen}
       onChange={onChange}
     >
-      <form action={onSubmit} className="flex flex-col gap-4 text-white mt-8">
-        <Input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          type="email"
-        />
-        <Input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Name"
-          type="name"
-        />
-        <Input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-          type="username"
-        />
-        <Input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          type="password"
-        />
-        <Button
-          onClick={onSubmit}
-          type="submit"
-          className="w-full mt-4 rounded-full bg-white text-black hover:bg-neutral-400"
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-4 text-white mt-8"
         >
-          Register
-        </Button>
-        <div className="text-neutral-500 text-center mt-2 font-light">
-          <span
-            onClick={onToggle}
-            className="text-white cursor-pointer hover:underline"
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="hacker" {...field} disabled={isPending} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="hacker@you@example.com"
+                    {...field}
+                    disabled={isPending}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="hackerAtAnonymous"
+                    {...field}
+                    disabled={isPending}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} disabled={isPending} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input type="password" {...field} disabled={isPending} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {error && <p className="text-red-500">{error}</p>}
+
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-full mt-4 rounded-full bg-white text-black hover:bg-neutral-400"
           >
-            Already have an account?
-          </span>
-        </div>
-      </form>
+            Register
+          </Button>
+          <div className="text-neutral-500 text-center mt-2 font-light">
+            <span
+              onClick={onToggle}
+              className="text-white cursor-pointer hover:underline"
+            >
+              Already have an account?
+            </span>
+          </div>
+        </form>
+      </Form>
     </Modal>
   );
 }

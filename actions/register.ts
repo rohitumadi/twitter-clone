@@ -6,7 +6,6 @@ import { getUserByEmail } from "@/lib/user-service";
 import { RegisterSchema } from "@/schemas/authSchema";
 
 async function register(values: z.infer<typeof RegisterSchema>) {
-  console.log(values);
   const validatedFields = RegisterSchema.safeParse(values);
 
   if (!validatedFields.success) {

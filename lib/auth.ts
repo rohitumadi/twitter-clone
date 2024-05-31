@@ -1,5 +1,6 @@
 import { getUserByEmail } from "@/lib/user-service";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/schemas/authSchema";
+
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
