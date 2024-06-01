@@ -1,17 +1,17 @@
 "use client";
 
-import register from "@/actions/register";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { loginByCredentials, register } from "@/actions/auth-actions";
 import useLoginModal from "@/hooks/useLoginModal";
 import useRegisterModal from "@/hooks/useRegisterModal";
 import { RegisterSchema } from "@/schemas/authSchema";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import * as z from "zod";
 import Modal from "../Modal";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import {
   Form,
   FormControl,
@@ -20,8 +20,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { useState, useTransition } from "react";
-import { signIn } from "@/lib/auth";
+import { Input } from "../ui/input";
 
 export default function RegisterModal() {
   const registerModal = useRegisterModal();
@@ -48,7 +47,7 @@ export default function RegisterModal() {
     loginModal.onOpen();
     registerModal.onClose();
   };
-  const onSubmit = (values: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
     setError("");
     startTransition(async () => {
       const data = await register(values);
@@ -57,10 +56,7 @@ export default function RegisterModal() {
       }
     });
     toast.success("Account created");
-    signIn("credentials", {
-      email: values.email,
-      password: values.password,
-    });
+    await loginByCredentials(values);
     registerModal.onClose();
   };
 

@@ -1,13 +1,15 @@
+import { auth } from "@/lib/auth";
 import { BsBellFill, BsHouseFill } from "react-icons/bs";
 import { FaUser } from "react-icons/fa";
-import SidebarLogo from "./SidebarLogo";
 import SidebarItem from "./SidebarItem";
-import { BiLogIn, BiLogOut } from "react-icons/bi";
+import SidebarLogo from "./SidebarLogo";
 import SidebarTweetButton from "./SidebarTweetButton";
-import { auth, signOut } from "@/lib/auth";
+import SignInBtn from "./SignInBtn";
+import SignOutBtn from "./SignOutBtn";
 
 export default async function Sidebar() {
   const session = await auth();
+
   const items = [
     {
       label: "Home",
@@ -25,9 +27,6 @@ export default async function Sidebar() {
       icon: FaUser,
     },
   ];
-  const handleLogout = async () => {
-    await signOut({ redirectTo: "/" });
-  };
   return (
     <div className="col-span-1 pr-4 md:pr-6">
       <div className="flex flex-col items-end">
@@ -42,15 +41,13 @@ export default async function Sidebar() {
             />
           ))}
           {session?.user ? (
-            <SidebarItem
-              onClick={handleLogout}
-              icon={BiLogOut}
-              label="Logout"
-            />
+            <>
+              <SignOutBtn />
+              <SidebarTweetButton />
+            </>
           ) : (
-            <SidebarItem icon={BiLogIn} label="Login" />
+            <SignInBtn />
           )}
-          <SidebarTweetButton />
         </div>
       </div>
     </div>
