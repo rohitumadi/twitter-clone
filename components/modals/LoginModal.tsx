@@ -19,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import toast from "react-hot-toast";
 
 export default function LoginModal() {
   const loginModal = useLoginModal();
@@ -40,6 +41,7 @@ export default function LoginModal() {
         setError(data?.error);
       } else {
         loginModal.onClose();
+        toast.success("Logged in");
       }
     });
   }
