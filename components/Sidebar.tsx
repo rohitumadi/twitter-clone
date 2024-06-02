@@ -23,7 +23,7 @@ export default async function Sidebar() {
     },
     {
       label: "Profile",
-      href: "/users/123",
+      href: `/user/${session?.user?.id}`,
       icon: FaUser,
     },
   ];

@@ -1,5 +1,6 @@
 "use client";
 
+import EditProfileModal from "@/components/modals/EditProfileModal";
 import LoginModal from "@/components/modals/LoginModal";
 import RegisterModal from "@/components/modals/RegisterModal";
 import { useEffect, useState } from "react";
@@ -21,6 +22,7 @@ export default function ModalProvider() {
     <>
       <LoginModal />
       <RegisterModal />
+      <EditProfileModal />
     </>
   );
 }

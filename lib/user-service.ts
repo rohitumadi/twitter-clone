@@ -19,6 +19,7 @@ export const getAllUsers = async () => {
       orderBy: {
         createdAt: "desc",
       },
+      take: 6,
     });
     return users;
   } catch (error) {

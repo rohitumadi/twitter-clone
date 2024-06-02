@@ -36,7 +36,11 @@ const authConfig = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
+    async session({ session }) {
+      const currentUser = await getUserByEmail(session.user.email);
+      if (currentUser) {
+        session.user.id = currentUser?.id;
+      }
       return session;
     },
     async jwt({ token }) {

@@ -1,10 +1,12 @@
 import { getAllUsers } from "@/lib/user-service";
-import Avatar from "./Avatar";
 import FollowUser from "./FollowUser";
+import { auth } from "@/lib/auth";
 
 export default async function FollowBar() {
-  const users = await getAllUsers();
+  let users = await getAllUsers();
   if (!users) return null;
+  const session = await auth();
+  users = users.filter((user) => user.id !== session?.user?.id);
   return (
     <div className=" hidden lg:block px-6 py-4">
       <div className="bg-neutral-800 p-4 rounded-xl">
