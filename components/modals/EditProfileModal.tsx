@@ -32,8 +32,14 @@ export default function EditProfileModal() {
     async function fetchUser() {
       console.log(currentUserId);
       const data = await fetchUserById(currentUserId);
-      console.log(data);
-      setUser(data?.user as User);
+      if (data) {
+        setUser(data?.user as User);
+        form.reset({
+          name: data?.user?.name as string,
+          username: data?.user?.username as string,
+          bio: data?.user?.bio as string,
+        });
+      }
     }
 
     if (currentUserId) fetchUser();
@@ -87,11 +93,7 @@ export default function EditProfileModal() {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={user?.name || ""}
-                    {...field}
-                    disabled={isPending}
-                  />
+                  <Input {...field} disabled={isPending} />
                 </FormControl>
 
                 <FormMessage />
@@ -105,11 +107,7 @@ export default function EditProfileModal() {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={user?.username || ""}
-                    {...field}
-                    disabled={isPending}
-                  />
+                  <Input {...field} disabled={isPending} />
                 </FormControl>
 
                 <FormMessage />
@@ -123,11 +121,7 @@ export default function EditProfileModal() {
               <FormItem>
                 <FormLabel>Bio</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={user?.bio || ""}
-                    {...field}
-                    disabled={isPending}
-                  />
+                  <Input {...field} disabled={isPending} />
                 </FormControl>
 
                 <FormMessage />

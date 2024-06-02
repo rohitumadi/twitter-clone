@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import * as z from "zod";
 import { UpdateUserSchema } from "@/schemas/updateUserSchema";
 import { getUserById } from "@/lib/user-service";
+import { revalidatePath } from "next/cache";
 
 export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
   const validatedFields = UpdateUserSchema.safeParse(values);
@@ -31,6 +32,7 @@ export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
         bio,
       },
     });
+    revalidatePath(`/user/${session?.user?.id}`);
   } catch (error) {
     return {
       error: "Something went wrong",

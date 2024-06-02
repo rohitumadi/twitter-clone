@@ -34,6 +34,9 @@ export default async function UserBio({ user, followersCount }: UserBioProps) {
         </span>
         <span className="capitalize text-neutral-400">@{user.username}</span>
       </div>
+      <div>
+        <p className="text-white p-2">{user.bio}</p>
+      </div>
       <div className="text-neutral-400 flex gap-2 p-2 items-center">
         <BiCalendar size={24} />
         <p>Joined {createdAt}</p>
