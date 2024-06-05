@@ -14,7 +14,7 @@ export default function FollowUser({ user }: FollowUserProps) {
       key={user.id}
       className="flex hover:opacity-90 transition  cursor-pointer items-center gap-4"
     >
-      <Avatar user={user} />
+      <Avatar imageUrl={user.profileImage as string} />
       <div className="flex flex-col">
         <span className="text-white hover:underline capitalize font-semibold">
           {user.name}

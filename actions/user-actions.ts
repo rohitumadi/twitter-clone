@@ -44,7 +44,6 @@ export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
 }
 
 export async function fetchUserById(id: string) {
-  console.log(id);
   const user = await getUserById(id);
   return user;
 }
