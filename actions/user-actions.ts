@@ -1,11 +1,10 @@
 "use server";
-
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import * as z from "zod";
+import { utapi } from "@/lib/uploadthing";
 import { UpdateUserSchema } from "@/schemas/updateUserSchema";
-import { getUserById } from "@/lib/user-service";
 import { revalidatePath } from "next/cache";
+import * as z from "zod";
 
 export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
   const validatedFields = UpdateUserSchema.safeParse(values);
@@ -14,7 +13,8 @@ export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
       error: "Invalid fields",
     };
   }
-  const { name, username, bio } = values;
+  const { name, username, bio, profileImageUrl, coverImageUrl } = values;
+  console.log(coverImageUrl, profileImageUrl);
   const session = await auth();
   if (!session) {
     return {
@@ -30,6 +30,8 @@ export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
         name,
         username,
         bio,
+        profileImage: profileImageUrl,
+        coverImage: coverImageUrl,
       },
     });
     revalidatePath(`/user/${session?.user?.id}`);
@@ -43,7 +45,6 @@ export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
   };
 }
 
-export async function fetchUserById(id: string) {
-  const user = await getUserById(id);
-  return user;
+export async function uploadImage(image: FormData, imageName: string) {
+  return await utapi.uploadFiles(image.get(imageName) as File);
 }

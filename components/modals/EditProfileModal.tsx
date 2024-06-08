@@ -2,10 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { fetchUserById, updateUser } from "@/actions/user-actions";
+import { updateUser, uploadImage } from "@/actions/user-actions";
 import useEditProfileModal from "@/hooks/useEditProfileModal";
 import { UpdateUserSchema } from "@/schemas/updateUserSchema";
 import { User } from "@prisma/client";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -22,7 +23,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import Image from "next/image";
+import { UPLOADTHING_URL } from "@/lib/constants";
 
 export default function EditProfileModal() {
   const pathname = usePathname();
@@ -47,15 +48,16 @@ export default function EditProfileModal() {
 
   useEffect(() => {
     async function fetchUser() {
-      const data = await fetchUserById(currentUserId);
-      if (data) {
-        setUser(data?.user as User);
-        setPreviewProfileImage(data?.user?.profileImage as string);
-        setPreviewCoverImage(data?.user?.coverImage as string);
+      const data = await fetch(`/api/user/${currentUserId}`);
+      const { user } = await data.json();
+      if (data.ok) {
+        setUser(user);
+        setPreviewProfileImage(user.profileImage);
+        setPreviewCoverImage(user.coverImage);
         form.reset({
-          name: data?.user?.name as string,
-          username: data?.user?.username as string,
-          bio: data?.user?.bio as string,
+          name: user.name,
+          username: user.username,
+          bio: user.bio,
         });
       }
     }
@@ -90,9 +92,23 @@ export default function EditProfileModal() {
 
   const onSubmit = async (values: z.infer<typeof UpdateUserSchema>) => {
     setError("");
+
+    const imageData = new FormData();
+
     startTransition(async () => {
-      console.log(values);
-      return;
+      if (profileImage) {
+        imageData.append("profileImage", profileImage);
+        const { data } = await uploadImage(imageData, "profileImage");
+        const profileImageUrl = UPLOADTHING_URL + data?.key;
+        form.setValue("profileImageUrl", profileImageUrl);
+      }
+
+      if (coverImage) {
+        imageData.append("coverImage", coverImage);
+        const { data } = await uploadImage(imageData, "coverImage");
+        const coverImageUrl = UPLOADTHING_URL + data?.key;
+        form.setValue("coverImageUrl", coverImageUrl);
+      }
       const data = await updateUser(values);
       if (data.error) {
         setError(data.error);
@@ -116,7 +132,7 @@ export default function EditProfileModal() {
           <FormField
             control={form.control}
             name="coverImage"
-            render={({ field: { onChange, ...rest } }) => (
+            render={({ field: { onChange, value, ...rest } }) => (
               <FormItem>
                 <FormLabel>Cover Image</FormLabel>
                 <FormControl>
@@ -146,7 +162,7 @@ export default function EditProfileModal() {
           <FormField
             control={form.control}
             name="profileImage"
-            render={({ field: { onChange, ...rest } }) => (
+            render={({ field: { onChange, value, ...rest } }) => (
               <FormItem>
                 <FormLabel>Profile Image </FormLabel>
                 <FormControl>
@@ -164,7 +180,7 @@ export default function EditProfileModal() {
                       src={previewProfileImage}
                       alt="Image Preview"
                       fill
-                      className="mt-2  object-cover"
+                      className="mt-2 rounded-full  object-cover"
                     />
                   </div>
                 )}
