@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import PostFeed from "@/components/PostFeed";
 import PostForm from "@/components/PostForm";
 import WelcomeForm from "@/components/WelcomeForm";
 import { auth } from "@/lib/auth";
@@ -16,6 +17,7 @@ export default async function Home() {
       ) : (
         <WelcomeForm />
       )}
+      <PostFeed />
     </>
   );
 }

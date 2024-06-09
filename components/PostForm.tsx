@@ -50,14 +50,14 @@ export default function PostForm({ currentUser }: PostFormProps) {
       await createPost(values.post, postImageUrl);
     });
     form.reset();
-    toast.success("Post created");
+    toast.success("Tweet created");
     setPostImage(null);
     setPostImagePreview("");
   };
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="p-4 gap-4  flex border-b-[1px] border-neutral-800">
+        <div className="p-4 gap-4 h-40  flex border-b-[1px] border-neutral-800">
           <div className="flex flex-col gap-4 items-center">
             <Avatar imageUrl={currentUser?.profileImage as string} />
 

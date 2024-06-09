@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ToasterProvider />
-        <div className="h-screen bg-black">
+        <div className=" bg-black">
           <div className="container h-full  mx-auto xl:px-30 max-w-6xl ">
             <div className="grid grid-cols-4 h-full">
               <ModalProvider />

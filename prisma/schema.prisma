@@ -23,8 +23,8 @@ model User{
   // this image is used for auth session
   image String?
   coverImage String?
-  //profile img can large n can break session
   profileImage String?
+  //profile img can large n can break session
   hashedPassword String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
