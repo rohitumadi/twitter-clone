@@ -7,6 +7,8 @@ export async function GET(
   const { userId } = params;
   try {
     const data = await getUserById(userId);
+    // For testing
+    // await new Promise((res) => setTimeout(res, 5000));
     return new Response(JSON.stringify(data), { status: 200 });
   } catch (error) {
     console.log(error);

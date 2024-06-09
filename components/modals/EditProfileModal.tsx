@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { updateUser, uploadImage } from "@/actions/user-actions";
 import useEditProfileModal from "@/hooks/useEditProfileModal";
+import { UPLOADTHING_URL } from "@/lib/constants";
 import { UpdateUserSchema } from "@/schemas/updateUserSchema";
-import { User } from "@prisma/client";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
@@ -23,13 +23,11 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { UPLOADTHING_URL } from "@/lib/constants";
 
 export default function EditProfileModal() {
   const pathname = usePathname();
   const currentUserId = pathname.slice(6);
 
-  const [user, setUser] = useState<User>();
   const [previewProfileImage, setPreviewProfileImage] = useState<string>();
   const [profileImage, setProfileImage] = useState<File>();
   const [previewCoverImage, setPreviewCoverImage] = useState<string>();
@@ -51,7 +49,6 @@ export default function EditProfileModal() {
       const data = await fetch(`/api/user/${currentUserId}`);
       const { user } = await data.json();
       if (data.ok) {
-        setUser(user);
         setPreviewProfileImage(user.profileImage);
         setPreviewCoverImage(user.coverImage);
         form.reset({

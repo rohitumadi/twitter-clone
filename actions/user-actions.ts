@@ -14,7 +14,6 @@ export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
     };
   }
   const { name, username, bio, profileImageUrl, coverImageUrl } = values;
-  console.log(coverImageUrl, profileImageUrl);
   const session = await auth();
   if (!session) {
     return {
@@ -47,4 +46,56 @@ export async function updateUser(values: z.infer<typeof UpdateUserSchema>) {
 
 export async function uploadImage(image: FormData, imageName: string) {
   return await utapi.uploadFiles(image.get(imageName) as File);
+}
+
+export async function createPost(body: string, postImageUrl?: string) {
+  const session = await auth();
+  if (!session) {
+    return {
+      error: "Not logged in",
+    };
+  }
+
+  const post = await db.post.create({
+    data: {
+      userId: session?.user?.id as string,
+      postImageUrl,
+      body,
+    },
+  });
+}
+
+export async function getAllPosts() {
+  const posts = await db.post.findMany({
+    include: {
+      user: true,
+      comments: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return posts;
+}
+
+export async function getAllPostsOfCurrentUser() {
+  const session = await auth();
+  if (!session) {
+    return {
+      error: "Not logged in",
+    };
+  }
+  const posts = await db.post.findMany({
+    where: {
+      userId: session?.user?.id,
+    },
+    include: {
+      user: true,
+      comments: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return posts;
 }

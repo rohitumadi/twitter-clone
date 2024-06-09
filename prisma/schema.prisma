@@ -44,6 +44,7 @@ model Post{
   updatedAt DateTime @updatedAt
   userId String @db.ObjectId
   likedIds String[] @db.ObjectId
+  postImageUrl String?
   //referencing userId from Post model to id from user model
   user User @relation(fields: [userId],references: [id],onDelete:Cascade)
   comments Comment[]

@@ -41,6 +41,8 @@ export const getUserById = async (id: string) => {
         },
       },
     });
+    // For testing
+    // await new Promise((res) => setTimeout(res, 5000));
     return { user, followersCount };
   } catch (error) {
     console.log(error);
