@@ -8,12 +8,18 @@ import { User } from "@prisma/client";
 
 export default async function Home() {
   const session = await auth();
-  const currentUser = await getUserByEmail(session?.user?.email as string);
+  let currentUser;
+  if (session) {
+    currentUser = await getUserByEmail(session?.user?.email as string);
+  }
   return (
     <>
       <Header label="Home" />
       {session?.user ? (
-        <PostForm currentUser={currentUser as User} />
+        <PostForm
+          currentUser={currentUser as User}
+          placeHolder="What's happening?"
+        />
       ) : (
         <WelcomeForm />
       )}

@@ -48,6 +48,7 @@ export default function EditProfileModal() {
     async function fetchUser() {
       const data = await fetch(`/api/user/${currentUserId}`);
       const { user } = await data.json();
+      console.log(data);
       if (data.ok) {
         setPreviewProfileImage(user.profileImage);
         setPreviewCoverImage(user.coverImage);
@@ -59,7 +60,7 @@ export default function EditProfileModal() {
       }
     }
 
-    if (currentUserId) fetchUser();
+    if (editProfileModal.isOpen && currentUserId) fetchUser();
   }, [currentUserId]);
   useEffect(() => {
     if (!editProfileModal.isOpen) {
@@ -91,22 +92,21 @@ export default function EditProfileModal() {
     setError("");
 
     const imageData = new FormData();
-
+    let profileImageUrl: string | undefined;
+    let coverImageUrl: string | undefined;
     startTransition(async () => {
       if (profileImage) {
         imageData.append("profileImage", profileImage);
         const { data } = await uploadImage(imageData, "profileImage");
-        const profileImageUrl = UPLOADTHING_URL + data?.key;
-        form.setValue("profileImageUrl", profileImageUrl);
+        profileImageUrl = UPLOADTHING_URL + data?.key;
       }
 
       if (coverImage) {
         imageData.append("coverImage", coverImage);
         const { data } = await uploadImage(imageData, "coverImage");
-        const coverImageUrl = UPLOADTHING_URL + data?.key;
-        form.setValue("coverImageUrl", coverImageUrl);
+        coverImageUrl = UPLOADTHING_URL + data?.key;
       }
-      const data = await updateUser(values);
+      const data = await updateUser(values, profileImageUrl, coverImageUrl);
       if (data.error) {
         setError(data.error);
       }

@@ -18,8 +18,9 @@ import toast from "react-hot-toast";
 
 interface PostFormProps {
   currentUser: User;
+  placeHolder?: string;
 }
-export default function PostForm({ currentUser }: PostFormProps) {
+export default function PostForm({ currentUser, placeHolder }: PostFormProps) {
   const [postImage, setPostImage] = useState<File | null>();
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -60,29 +61,30 @@ export default function PostForm({ currentUser }: PostFormProps) {
         <div className="p-4 gap-4 h-40  flex border-b-[1px] border-neutral-800">
           <div className="flex flex-col gap-4 items-center">
             <Avatar imageUrl={currentUser?.profileImage as string} />
+            <div className="mt-auto">
+              <FormField
+                control={form.control}
+                name="postImage"
+                render={({ field: { onChange, value, ...rest } }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Label htmlFor="postImage">
+                        <Input
+                          onChange={handlePostImageChange}
+                          id="postImage"
+                          className="hidden "
+                          {...rest}
+                          type="file"
+                        />
+                        <FaImage className="text-sky-500 cursor-pointer" />
+                      </Label>
+                    </FormControl>
 
-            <FormField
-              control={form.control}
-              name="postImage"
-              render={({ field: { onChange, value, ...rest } }) => (
-                <FormItem>
-                  <FormControl>
-                    <Label htmlFor="postImage">
-                      <Input
-                        onChange={handlePostImageChange}
-                        id="postImage"
-                        className="hidden"
-                        {...rest}
-                        type="file"
-                      />
-                      <FaImage className="text-sky-500 cursor-pointer" />
-                    </Label>
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
           <div className="w-full">
             <FormField
@@ -94,7 +96,7 @@ export default function PostForm({ currentUser }: PostFormProps) {
                     <textarea
                       {...field}
                       maxLength={200}
-                      placeholder="What's happening?"
+                      placeholder={placeHolder}
                       className="w-full resize-none bg-transparent outline-none text-white text-lg placeholder-neutral-500"
                     ></textarea>
                   </FormControl>

@@ -1,4 +1,3 @@
-import { auth } from "./auth";
 import { db } from "./db";
 
 export async function getAllPosts() {
@@ -14,16 +13,10 @@ export async function getAllPosts() {
   return posts;
 }
 
-export async function getAllPostsOfCurrentUser() {
-  const session = await auth();
-  if (!session) {
-    return {
-      error: "Not logged in",
-    };
-  }
+export async function getAllPostsByUserId(userId: string) {
   const posts = await db.post.findMany({
     where: {
-      userId: session?.user?.id,
+      userId: userId,
     },
     include: {
       user: true,
@@ -34,4 +27,24 @@ export async function getAllPostsOfCurrentUser() {
     },
   });
   return posts;
+}
+
+export async function getPostById(id: string) {
+  const post = await db.post.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      user: true,
+      comments: {
+        include: {
+          user: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
+  return post;
 }

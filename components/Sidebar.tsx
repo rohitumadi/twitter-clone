@@ -32,14 +32,15 @@ export default async function Sidebar() {
       <div className="flex flex-col items-end">
         <div className="space-y-2">
           <SidebarLogo />
-          {items.map((item) => (
-            <SidebarItem
-              key={item.href}
-              icon={item.icon}
-              href={item.href}
-              label={item.label}
-            />
-          ))}
+          {session?.user &&
+            items.map((item) => (
+              <SidebarItem
+                key={item.href}
+                icon={item.icon}
+                href={item.href}
+                label={item.label}
+              />
+            ))}
           {session?.user ? (
             <>
               <SignOutBtn />
