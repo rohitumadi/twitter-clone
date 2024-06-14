@@ -57,7 +57,7 @@ export default function PostForm({ currentUser }: PostFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="p-4 gap-4 h-40  flex border-b-[1px] border-neutral-800">
+        <div className="p-4 gap-4 h-fit flex border-b-[1px] border-neutral-800">
           <div className="flex flex-col gap-4 items-center">
             <Avatar imageUrl={currentUser?.profileImage as string} />
             <div className="mt-auto">
@@ -96,7 +96,7 @@ export default function PostForm({ currentUser }: PostFormProps) {
                       {...field}
                       maxLength={200}
                       placeholder="What's happening?"
-                      className="w-full resize-none bg-transparent outline-none text-white text-lg placeholder-neutral-500"
+                      className="w-full overflow-hidden resize-y bg-transparent outline-none text-white text-lg placeholder-neutral-500"
                     ></textarea>
                   </FormControl>
 

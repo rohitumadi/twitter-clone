@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { BiArrowBack } from "react-icons/bi";
-import Spinner from "./Spinner";
 
 interface HeaderProps {
   label: string;

@@ -20,6 +20,7 @@ export default async function Sidebar() {
       label: "Notifications",
       href: "/notifications",
       icon: BsBellFill,
+      alert: session?.user?.hasNotification,
     },
     {
       label: "Profile",
@@ -28,8 +29,8 @@ export default async function Sidebar() {
     },
   ];
   return (
-    <div className="col-span-1 pr-4 md:pr-6">
-      <div className="flex flex-col items-end">
+    <div className="col-span-1 sticky top-0  md:pr-4">
+      <div className="flex sticky top-0  flex-col items-end">
         <div className="space-y-2">
           <SidebarLogo />
           {session?.user &&
@@ -39,6 +40,7 @@ export default async function Sidebar() {
                 icon={item.icon}
                 href={item.href}
                 label={item.label}
+                alert={item.alert}
               />
             ))}
           {session?.user ? (

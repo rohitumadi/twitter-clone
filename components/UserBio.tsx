@@ -21,7 +21,7 @@ export default function UserBio({
 
   return (
     <div className="text-white border-b-[1px] pb-4 border-neutral-800">
-      <div className="flex justify-end p-2">
+      <div className="flex justify-end p-2 ">
         {currentUser?.id === user.id ? (
           <EditProfileBtn />
         ) : (

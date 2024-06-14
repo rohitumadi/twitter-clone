@@ -19,7 +19,7 @@ export default function UserHero({ user }: UserHeroProps) {
           />
         )}
 
-        <div className="absolute -bottom-16 left-4">
+        <div className="absolute -bottom-16 left-1  lg:left-4">
           <Avatar imageUrl={user?.profileImage as string} isLarge hasBorder />
         </div>
       </div>

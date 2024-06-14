@@ -135,6 +135,25 @@ export async function toggleLikePost(postId: string) {
       likedIds: updatedLikes,
     },
   });
+  //send notification only on like event not on unlike event
+  if (!likedIds.includes(userId)) {
+    if (post.userId !== userId) {
+      await db.notification.create({
+        data: {
+          userId: post.userId,
+          body: "Someone liked your post",
+        },
+      });
+      await db.user.update({
+        where: {
+          id: post.userId,
+        },
+        data: {
+          hasNotification: true,
+        },
+      });
+    }
+  }
   return updatedPost;
 }
 
@@ -152,6 +171,29 @@ export async function commentPost(postId: string, body: string) {
       postId,
     },
   });
+  const post = await db.post.findUnique({
+    where: {
+      id: postId,
+    },
+  });
+
+  if (post?.userId !== session?.user?.id) {
+    await db.notification.create({
+      data: {
+        userId: post?.userId as string,
+        body: "Someone replied to your tweet",
+      },
+    });
+    await db.user.update({
+      where: {
+        id: post?.userId,
+      },
+      data: {
+        hasNotification: true,
+      },
+    });
+  }
+
   revalidatePath(`/post/${postId}`);
   return comment;
 }

@@ -4,11 +4,29 @@ import { LoginSchema } from "@/schemas/authSchema";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import NextAuth, { NextAuthConfig } from "next-auth";
+import NextAuth, { DefaultSession, NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+declare module "next-auth" {
+  /**
+   * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
+    user: {
+      /** The user's postal address. */
+      id: string;
+      hasNotification: boolean;
+      /**
+       * By default, Type̦Script merges new interface properties and overwrites existing ones.
+       * In this case, the default session user properties will be overwritten,
+       * with the new ones defined above. To keep the default session user properties,
+       * you need to add them back into the newly declared interface.
+       */
+    } & DefaultSession["user"];
+  }
+}
 
 const prisma = new PrismaClient();
-const authConfig = {
+export const authConfig = {
   adapter: PrismaAdapter(prisma),
   providers: [
     Credentials({
@@ -40,6 +58,7 @@ const authConfig = {
       const currentUser = await getUserByEmail(session.user.email);
       if (currentUser) {
         session.user.id = currentUser?.id;
+        session.user.hasNotification = currentUser?.hasNotification as boolean;
       }
       return session;
     },
