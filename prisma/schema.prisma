@@ -56,7 +56,7 @@ model Comment{
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   userId String @db.ObjectId
-  postId String[] @db.ObjectId
+  postId String @db.ObjectId
   //referencing userId from Comment model to id from user model
   user User @relation(fields: [userId],references: [id],onDelete:Cascade)
   post Post @relation(fields: [postId],references: [id],onDelete:Cascade)

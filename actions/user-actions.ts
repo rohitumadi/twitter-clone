@@ -99,7 +99,7 @@ export async function followUser(userId: string) {
   return updatedUser;
 }
 
-export async function likePost(postId: string) {
+export async function toggleLikePost(postId: string) {
   const session = await auth();
   if (!session) {
     return {
@@ -135,8 +135,23 @@ export async function likePost(postId: string) {
       likedIds: updatedLikes,
     },
   });
-  revalidatePath(`/post/${postId}`);
   return updatedPost;
 }
 
-export async function unlikePost(postId: string) {}
+export async function commentPost(postId: string, body: string) {
+  const session = await auth();
+  if (!session) {
+    return {
+      error: "Not logged in",
+    };
+  }
+  const comment = await db.comment.create({
+    data: {
+      body,
+      userId: session?.user?.id as string,
+      postId,
+    },
+  });
+  revalidatePath(`/post/${postId}`);
+  return comment;
+}

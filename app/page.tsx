@@ -16,10 +16,7 @@ export default async function Home() {
     <>
       <Header label="Home" />
       {session?.user ? (
-        <PostForm
-          currentUser={currentUser as User}
-          placeHolder="What's happening?"
-        />
+        <PostForm currentUser={currentUser as User} />
       ) : (
         <WelcomeForm />
       )}

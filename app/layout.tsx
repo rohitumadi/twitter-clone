@@ -1,10 +1,10 @@
+import FollowBar from "@/components/FollowBar";
+import Sidebar from "@/components/Sidebar";
+import ModalProvider from "@/providers/ModalProvider";
+import ToasterProvider from "@/providers/ToastProviders";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
-import FollowBar from "@/components/FollowBar";
-import ModalProvider from "@/providers/ModalProvider";
-import ToasterProvider from "@/providers/ToastProviders";
 
 const inter = Inter({ subsets: ["latin"] });
 

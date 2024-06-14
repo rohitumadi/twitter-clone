@@ -18,9 +18,8 @@ import toast from "react-hot-toast";
 
 interface PostFormProps {
   currentUser: User;
-  placeHolder?: string;
 }
-export default function PostForm({ currentUser, placeHolder }: PostFormProps) {
+export default function PostForm({ currentUser }: PostFormProps) {
   const [postImage, setPostImage] = useState<File | null>();
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
@@ -96,7 +95,7 @@ export default function PostForm({ currentUser, placeHolder }: PostFormProps) {
                     <textarea
                       {...field}
                       maxLength={200}
-                      placeholder={placeHolder}
+                      placeholder="What's happening?"
                       className="w-full resize-none bg-transparent outline-none text-white text-lg placeholder-neutral-500"
                     ></textarea>
                   </FormControl>
@@ -122,6 +121,7 @@ export default function PostForm({ currentUser, placeHolder }: PostFormProps) {
           <div className="self-end">
             <Button
               type="submit"
+              disabled={isPending}
               className="bg-sky-500 text-white hover:bg-sky-600 rounded-full"
               variant="secondary"
             >

@@ -1,12 +1,14 @@
 "use client";
+import { toggleLikePost } from "@/actions/user-actions";
+import useLoginModal from "@/hooks/useLoginModal";
 import { Post, User } from "@prisma/client";
 import { formatDistanceToNow } from "date-fns";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { FiHeart, FiMessageCircle } from "react-icons/fi";
 import Avatar from "./Avatar";
-import { useRouter } from "next/navigation";
-import useLoginModal from "@/hooks/useLoginModal";
-import { likePost } from "@/actions/user-actions";
 
 interface ExtendedPost extends Post {
   user: User;
@@ -15,14 +17,15 @@ interface ExtendedPost extends Post {
 
 interface PostItemProps {
   post: ExtendedPost;
+  currentUserId: string;
 }
 
-export default function PostItem({ post }: PostItemProps) {
+export default function PostItem({ post, currentUserId }: PostItemProps) {
   const router = useRouter();
   const loginModal = useLoginModal();
   const user = post.user;
   const createdAt = formatDistanceToNow(post.createdAt);
-  // const isLiked = post.likedIds.includes(currentUserId as string);
+  const isLiked = post.likedIds.includes(currentUserId as string);
   const handleRedirectToPost = () => {
     router.push(`/post/${post.id}`);
   };
@@ -30,12 +33,15 @@ export default function PostItem({ post }: PostItemProps) {
     e.stopPropagation();
     router.push(`/user/${user.id}`);
   };
-  const handleLikePost = async () => {
-    // if (!currentUserId) {
-    //   loginModal.onOpen();
-    //   return;
-    // }
-    // await likePost(post.id);
+  const handleLikePost = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!currentUserId) {
+      loginModal.onOpen();
+      return;
+    }
+    await toggleLikePost(post.id);
+    router.refresh();
+    isLiked ? toast.success("Post disliked") : toast.success("Post liked");
   };
   return (
     <div
@@ -75,8 +81,9 @@ export default function PostItem({ post }: PostItemProps) {
             <FiHeart
               onClick={handleLikePost}
               size={20}
-              // color={isLiked ? "red" : ""}
-              className="hover:text-red-500"
+              fill={isLiked ? "red" : ""}
+              color={isLiked ? "red" : ""}
+              className="hover:text-red-500 "
             />
             <p>{post.likedIds?.length || 0}</p>
           </div>

@@ -8,6 +8,8 @@ interface PostFeedProps {
 //userId is optional to get all posts if not provided
 //if provided, get posts by userId
 export default async function PostFeed({ userId }: PostFeedProps) {
+  const session = await auth();
+  const currentUserId = session?.user?.id;
   let posts;
   if (userId) {
     posts = await getAllPostsByUserId(userId);
@@ -19,7 +21,7 @@ export default async function PostFeed({ userId }: PostFeedProps) {
     <div className="">
       {posts?.map((post) => (
         // @ts-ignore
-        <PostItem key={post.id} post={post} />
+        <PostItem key={post.id} post={post} currentUserId={currentUserId} />
       ))}
     </div>
   );
