@@ -3,7 +3,11 @@ import { db } from "./db";
 
 export const getNotificationOfCurrentUser = async () => {
   const session = await auth();
-  if (!session) return new Error("You must be logged in");
+  if (!session) {
+    return {
+      error: "Not logged in",
+    };
+  }
 
   const currentUserId = session?.user?.id;
   await db.user.update({

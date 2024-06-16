@@ -4,7 +4,7 @@ import { BsTwitter } from "react-icons/bs";
 export default async function Notifications() {
   const notifications = await getNotificationOfCurrentUser();
 
-  if (notifications?.length === 0 || !notifications) {
+  if ("error" in notifications || !notifications) {
     return (
       <div className="text-center p-6 text-muted-foreground">
         No Notifications
