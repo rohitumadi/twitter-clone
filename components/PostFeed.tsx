@@ -50,7 +50,7 @@ export default function PostFeed({ userId, currentUserId }: PostFeedProps) {
       dataLength={posts.length}
       next={fetchMoreData}
       hasMore={hasMore}
-      height={"100vh"}
+      style={{ overflowY: "scroll", height: "100%" }}
       loader={<Spinner />}
       endMessage={
         <p className="text-center text-muted-foreground">

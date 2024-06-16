@@ -25,8 +25,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ToasterProvider />
-        <div className=" bg-black ">
-          <div className="sm:container h-screen overflow-auto mx-auto xl:px-30 max-w-6xl ">
+        <div className=" bg-black min-h-screen">
+          <div className="sm:container  mx-auto xl:px-30 max-w-6xl ">
             <div className="grid sm:grid-cols-4 grid-cols-5 ">
               <ModalProvider />
               <Sidebar />

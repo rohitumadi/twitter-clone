@@ -15,6 +15,7 @@ import Image from "next/image";
 import { createPost, uploadImage } from "@/actions/user-actions";
 import { UPLOADTHING_URL } from "@/lib/constants";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 interface PostFormProps {
   currentUser: User;
@@ -23,6 +24,7 @@ export default function PostForm({ currentUser }: PostFormProps) {
   const [postImage, setPostImage] = useState<File | null>();
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const [postImagePreview, setPostImagePreview] = useState<string>();
   const form = useForm<z.infer<typeof PostSchema>>({
@@ -51,6 +53,7 @@ export default function PostForm({ currentUser }: PostFormProps) {
     });
     form.reset();
     toast.success("Tweet created");
+    router.refresh();
     setPostImage(null);
     setPostImagePreview("");
   };

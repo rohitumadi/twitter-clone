@@ -67,7 +67,7 @@ export async function createPost(body: string, postImageUrl?: string) {
       body,
     },
   });
-  revalidatePath("/");
+  // revalidatePath("/");
 }
 
 export async function followUser(userId: string) {
