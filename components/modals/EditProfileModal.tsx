@@ -48,7 +48,6 @@ export default function EditProfileModal() {
     async function fetchUser() {
       const data = await fetch(`/api/user/${currentUserId}`);
       const { user } = await data.json();
-      console.log(data);
       if (data.ok) {
         setPreviewProfileImage(user.profileImage);
         setPreviewCoverImage(user.coverImage);

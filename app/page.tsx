@@ -20,7 +20,7 @@ export default async function Home() {
       ) : (
         <WelcomeForm />
       )}
-      <PostFeed />
+      <PostFeed currentUserId={currentUser?.id as string} />
     </>
   );
 }

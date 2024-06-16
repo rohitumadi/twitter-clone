@@ -11,6 +11,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Twitter",
   description: "Tweet your heart out",
+  icons: {
+    icon: "/images/logo1.png",
+  },
 };
 
 export default function RootLayout({
@@ -22,12 +25,12 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ToasterProvider />
-        <div className=" bg-black">
+        <div className=" bg-black ">
           <div className="sm:container h-screen overflow-auto mx-auto xl:px-30 max-w-6xl ">
-            <div className="grid sm:grid-cols-4 grid-cols-5 h-full">
+            <div className="grid sm:grid-cols-4 grid-cols-5 ">
               <ModalProvider />
               <Sidebar />
-              <div className="col-span-4 sm:col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800">
+              <div className="col-span-4 overflow-y-auto sm:col-span-3 lg:col-span-2 border-x-[1px] border-neutral-800">
                 {children}
               </div>
               <FollowBar />

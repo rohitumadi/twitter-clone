@@ -2,8 +2,7 @@
 import { toggleLikePost } from "@/actions/user-actions";
 import useLoginModal from "@/hooks/useLoginModal";
 import { Post, User } from "@prisma/client";
-import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
-import { useSession } from "next-auth/react";
+import { formatDistanceToNowStrict } from "date-fns";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";

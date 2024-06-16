@@ -46,7 +46,7 @@ export default async function UserPage({ params }: UserPageProps) {
         user={data?.user as User}
         followersCount={data?.followersCount as number}
       />
-      <PostFeed userId={userId} />
+      <PostFeed userId={userId} currentUserId={currentUserId as string} />
     </>
   );
 }
