@@ -53,7 +53,6 @@ export default function PostForm({ currentUser }: PostFormProps) {
     });
     form.reset();
     toast.success("Tweet created");
-    router.refresh();
     setPostImage(null);
     setPostImagePreview("");
   };
