@@ -1,10 +1,12 @@
 import Header from "@/components/Header";
 import PostFeed from "@/components/PostFeed";
 import PostForm from "@/components/PostForm";
+import Spinner from "@/components/Spinner";
 import WelcomeForm from "@/components/WelcomeForm";
 import { auth } from "@/lib/auth";
 import { getUserByEmail } from "@/lib/user-service";
 import { User } from "@prisma/client";
+import { Suspense } from "react";
 
 export default async function Home() {
   const session = await auth();
@@ -20,7 +22,9 @@ export default async function Home() {
       ) : (
         <WelcomeForm />
       )}
-      <PostFeed currentUserId={currentUser?.id as string} />
+      <Suspense fallback={<Spinner />}>
+        <PostFeed currentUserId={currentUser?.id as string} />
+      </Suspense>
     </>
   );
 }

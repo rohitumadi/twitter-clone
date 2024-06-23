@@ -1,10 +1,12 @@
 import Header from "@/components/Header";
 import PostFeed from "@/components/PostFeed";
+import Spinner from "@/components/Spinner";
 import UserBio from "@/components/UserBio";
 import UserHero from "@/components/UserHero";
 import { auth } from "@/lib/auth";
 import { getUserById } from "@/lib/user-service";
 import { User } from "@prisma/client";
+import { Suspense } from "react";
 
 export async function generateMetadata({ params }: UserPageProps) {
   const { userId } = params;
@@ -46,7 +48,9 @@ export default async function UserPage({ params }: UserPageProps) {
         user={data?.user as User}
         followersCount={data?.followersCount as number}
       />
-      <PostFeed userId={userId} currentUserId={currentUserId as string} />
+      <Suspense fallback={<Spinner />}>
+        <PostFeed userId={userId} currentUserId={currentUserId as string} />
+      </Suspense>
     </>
   );
 }

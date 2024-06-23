@@ -73,6 +73,8 @@ export async function getAllPosts() {
       createdAt: "desc",
     },
   });
+  // For testing
+  // await new Promise((res) => setTimeout(res, 5000));
   return posts;
 }
 
@@ -89,6 +91,8 @@ export async function getAllPostsByUserId(userId: string) {
       createdAt: "desc",
     },
   });
+  // For testing
+  // await new Promise((res) => setTimeout(res, 5000));
   return posts;
 }
 
